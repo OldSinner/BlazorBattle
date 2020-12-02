@@ -139,8 +139,9 @@ app {
 .TopMenu
 {
     justify-content:center;
-    width: 100%;
+      width: 100%;
     display:flex;
+ 
 }
 @media (max-width: 767.98px) {
     .main .top-row:not(.auth) {
