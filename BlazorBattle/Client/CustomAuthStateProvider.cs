@@ -19,6 +19,7 @@ namespace BlazorBattle.Client
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
+            var state = new AuthenticationState(new ClaimsPrincipal());
             if (await _localStorageService.GetItemAsync<bool>("isAuthenticated"))
             {
 
@@ -29,14 +30,12 @@ namespace BlazorBattle.Client
                     new Claim(ClaimTypes.Name, "admin")
                     }, "Test Auth Type");
                 var user = new ClaimsPrincipal(identity);
-                var state = new AuthenticationState(user);
+                state = new AuthenticationState(user);
 
-                NotifyAuthenticationStateChanged(Task.FromResult(state));
-                return state;
+
             }
-            
-
-            return new AuthenticationState(new ClaimsPrincipal());
+            NotifyAuthenticationStateChanged(Task.FromResult(state));
+            return state;
         }
     }
 }
