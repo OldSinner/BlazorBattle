@@ -23,6 +23,7 @@ namespace BlazorBattle.Client.Services
         
 
         public IList<UserUnit> MyUnits { get; set; } = new List<UserUnit>();
+        
 
         public void AddUnit(int unitId)
         {

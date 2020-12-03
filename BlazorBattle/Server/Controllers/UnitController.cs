@@ -19,7 +19,7 @@ namespace BlazorBattle.Server.Controllers
             new Unit {id=3,name="Mage",Attack=20,Defense=1, BananaCost=150 }
         };
         [HttpGet]
-        public IActionResult GetUnits()
+        public async Task<IActionResult> GetUnits()
         {
             return Ok(Units);
         }
