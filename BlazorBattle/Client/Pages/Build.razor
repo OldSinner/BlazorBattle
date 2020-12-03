@@ -40,5 +40,9 @@
 
 
     }
+    protected override async Task OnInitializedAsync()
+    {
+        await UnitService.LoadUnistAsync();
+    }
 
 }
