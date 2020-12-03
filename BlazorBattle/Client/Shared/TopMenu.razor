@@ -1,27 +1,32 @@
 ﻿@inject BlazorBattle.Client.Services.IBananaService BananaService
 @implements IDisposable
-    <AuthorizeView>
-        <Authorized>
-            <div class="TopMenu">
-                <img src="/Icons/I_C_Banana.png" /> <span class="popover-header">@BananaService.Bananas</span>
-                <AddBananas />
-            </div>
-        </Authorized>
-        <NotAuthorized>
-            <div>
-                <NavLink href="login">Login</NavLink>
-                <NavLink href="register">Register</NavLink>
-            </div>
-        </NotAuthorized>
-    </AuthorizeView>
-    @code {
+<AuthorizeView>
+    <Authorized>
 
-        protected override void OnInitialized()
-        {
-            BananaService.OnChange += StateHasChanged;
-        }
-        public void Dispose()
-        {
-            BananaService.OnChange -= StateHasChanged;
-        }
+        <div class="TopMenu">
+            <span class="border">
+                <img src="/Icons/I_C_Banana.png" />
+               @BananaService.Bananas
+                <AddBananas />
+            </span>
+
+        </div>
+
+    </Authorized>
+    <NotAuthorized>
+        <div>
+            <NavLink href="">Login</NavLink>
+            <NavLink href="register">Register</NavLink>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+@code {
+    protected override void OnInitialized()
+    {
+        BananaService.OnChange += StateHasChanged;
     }
+    public void Dispose()
+    {
+        BananaService.OnChange -= StateHasChanged;
+    }
+}

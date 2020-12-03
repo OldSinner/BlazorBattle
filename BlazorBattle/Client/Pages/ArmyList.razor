@@ -1,6 +1,6 @@
 ﻿@page "/army"
 @inject BlazorBattle.Client.Services.IUnitService UnitService
-
+@attribute [Authorize]
 <h3>Army List</h3>
 
 @foreach (var userUnit in UnitService.MyUnits)
