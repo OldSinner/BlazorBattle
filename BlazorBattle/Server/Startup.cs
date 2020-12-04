@@ -1,7 +1,9 @@
 using BlazorBattle.Server.Data;
+using BlazorBattle.Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +32,7 @@ namespace BlazorBattle.Server
             services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllersWithViews();
             services.AddRazorPages();
+            
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(optons =>
@@ -42,6 +45,8 @@ namespace BlazorBattle.Server
                         ValidateAudience = false
                     };
                 });
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IUtilityService, UtilityService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -18,5 +18,10 @@ namespace BlazorBattle.Shared
         public DateTime DateCreated { get; set; } = DateTime.Now;
 
         public List<UserUnit> Units { get; set; }
+
+        public static ReadOnlySpan<char> FindFirstValue(object nameIdentifier)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
