@@ -9,5 +9,6 @@ namespace BlazorBattle.Client.Services
     public interface IAuthService
     {
         Task<ServiceResponse<int>> Regsiter(UserRegister request);
+        Task<ServiceResponse<string>> Login(UserLogin request);
     }
 }

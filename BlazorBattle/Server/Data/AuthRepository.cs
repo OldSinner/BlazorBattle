@@ -16,9 +16,28 @@ namespace BlazorBattle.Server.Data
             _context = context;
         }
 
-        public Task<ServiceResponse<string>> Login(string email, string password)
+        public async Task<ServiceResponse<string>> Login(string email, string password)
         {
-            throw new NotImplementedException();
+            var response = new ServiceResponse<string>();
+            User user = await _context.Users.FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+            if(user == null)
+            {
+                response.isSuccess = false;
+                response.Message = "User don't exist";
+            }
+            else if(!VerifyPasswordHash(password,user.PasswordHash,user.PasswordSalt))
+            {
+                response.isSuccess = false;
+                response.Message = "Wrong Password!";
+            }
+            else
+            {
+                response.Data = user.id.ToString();
+                response.isSuccess = true;
+                response.Message = "Logged!";
+
+            }
+            return response;
         }
 
         public async Task<ServiceResponse<int>> Register(User user, string password)
@@ -39,7 +58,7 @@ namespace BlazorBattle.Server.Data
             return new ServiceResponse<int>
             {
                 Data = user.id,
-                Message="Registration Successful!"
+                Message = "Registration Successful!"
             };
         }
 
@@ -59,5 +78,21 @@ namespace BlazorBattle.Server.Data
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
         }
+        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        {
+            using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
+            {
+                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                for (int i = 0; i < computedHash.Length; i++)
+                {
+                    if (computedHash[i] != passwordHash[i])
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
     }
+
 }
