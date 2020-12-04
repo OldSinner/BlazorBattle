@@ -1,4 +1,5 @@
 ﻿using BlazorBattle.Server.Data;
+using BlazorBattle.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,11 +23,21 @@ namespace BlazorBattle.Server.Controllers
         {
             _context = context;
         }
+        private int GetUserId() => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        private async Task<User> GetUser() => await _context.Users.FirstOrDefaultAsync(u => u.id == GetUserId());
         [HttpGet("GetBananas")]
         public async Task<IActionResult> GetBananas()
         {
-            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.id == userId);
+
+            var user = await  GetUser();
+            return Ok(user.Bananas);
+        }
+        [HttpPut("AddBananas")]
+        public async Task<IActionResult> AddBananas([FromBody]int bananas)
+        {
+            var user = await GetUser();
+            user.Bananas += bananas;
+            await _context.SaveChangesAsync();
             return Ok(user.Bananas);
         }
     }
