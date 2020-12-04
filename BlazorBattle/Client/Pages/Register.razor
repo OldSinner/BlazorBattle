@@ -1,7 +1,8 @@
 ﻿@page "/register"
 @inject BlazorBattle.Client.Services.IUnitService UnitService
 @inject NavigationManager NavigationManager
-
+@inject BlazorBattle.Client.Services.IAuthService AuthService
+@inject IToastService IToastService
 
 <EditForm Model="@register" OnValidSubmit="HandleRegister">
     <DataAnnotationsValidator />
@@ -60,9 +61,18 @@
 @code {
     BlazorBattle.Shared.UserRegister register = new BlazorBattle.Shared.UserRegister();
 
-    void HandleRegister()
+    async void HandleRegister()
     {
-        NavigationManager.NavigateTo("login");
+        var result = await AuthService.Regsiter(register);
+        if(result.isSuccess)
+        {
+            IToastService.ShowSuccess(result.Message);
+            NavigationManager.NavigateTo("");
+        }
+        else
+        {
+            IToastService.ShowError(result.Message);
+        }
     }
     protected override async Task OnInitializedAsync()
     {
