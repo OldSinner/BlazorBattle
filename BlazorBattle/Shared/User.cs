@@ -19,9 +19,7 @@ namespace BlazorBattle.Shared
 
         public List<UserUnit> Units { get; set; }
 
-        public static ReadOnlySpan<char> FindFirstValue(object nameIdentifier)
-        {
-            throw new NotImplementedException();
-        }
+        public int Battles { get; set; }
+        public int Victories { get; set; }
     }
 }

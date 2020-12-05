@@ -26,21 +26,43 @@ namespace BlazorBattle.Server.Controllers
             _context = context;
             _utilityService = utilityService;
         }
-        
+
         [HttpGet("GetBananas")]
         public async Task<IActionResult> GetBananas()
         {
 
-            var user = await  _utilityService.GetUser();
+            var user = await _utilityService.GetUser();
             return Ok(user.Bananas);
         }
         [HttpPut("AddBananas")]
-        public async Task<IActionResult> AddBananas([FromBody]int bananas)
+        public async Task<IActionResult> AddBananas([FromBody] int bananas)
         {
             var user = await _utilityService.GetUser();
             user.Bananas += bananas;
             await _context.SaveChangesAsync();
             return Ok(user.Bananas);
+        }
+        [HttpGet("leaderboard")]
+        public async Task<IActionResult> GetLeaderboard()
+        {
+            var user = await _context.Users.Where(x => !x.IsDeleted).ToListAsync();
+            user = user.OrderByDescending(u => u.Victories)
+                .ThenBy(u => (u.Battles - u.Victories))
+                .ThenBy(u => u.DateCreated)
+                .ToList();
+            int rank = 1;
+            var response = user.Select(
+                user => new UserStatistic
+                {
+                    Rank = rank++,
+                    UserId = user.id,
+                    Username = user.Username,
+                    Battles = user.Battles,
+                    Victories = user.Victories,
+                    Deafeat = user.Battles - user.Victories
+                });
+            return Ok(response);
+
         }
     }
 }
